@@ -4,45 +4,15 @@ import (
 	"context"
 	"testing"
 	"github.com/google/go-cmp/cmp"
-	"github.com/slsa-framework/slsa-github-generator/github"
+	"github.com/AdamKorcz/java-slsa-generator/gh"
 	"github.com/slsa-framework/slsa-github-generator/slsa"
 	slsa02 "github.com/in-toto/in-toto-golang/in_toto/slsa_provenance/v0.2"
 	slsacommon "github.com/in-toto/in-toto-golang/in_toto/slsa_provenance/common"
 	intoto "github.com/in-toto/in-toto-golang/in_toto"
 )
 
-var (
-	testBuildType   = "http://example.com/v1"
-	testBuildConfig = "test build config"
-)
-
-type TestBuild struct {
-	*slsa.GithubActionsBuild
-}
-
-func (*TestBuild) URI() string {
-	return testBuildType
-}
-
-func (*TestBuild) BuildConfig(context.Context) (interface{}, error) {
-	return testBuildConfig, nil
-}
-
 func TestProvenance1(t *testing.T) {
-	b := &TestBuild{
-		GithubActionsBuild: slsa.NewGithubActionsBuild(nil, github.WorkflowContext{
-			RunID:      "12345",
-			RunAttempt: "1",
-			EventName:  "pull_request",
-			SHA:        "abcde",
-			RefType:    "branch",
-			Ref:        "some/ref",
-			BaseRef:    "some/base_ref",
-			HeadRef:    "some/head_ref",
-			RunNumber:  "102937",
-			Actor:      "user",
-		}).WithClients(&slsa.NilClientProvider{}),
-	}
+	b := NewTestBuild()
 	expected := &intoto.ProvenanceStatement{
 				StatementHeader: intoto.StatementHeader{
 					Type:          intoto.StatementInTotoV01,
@@ -52,8 +22,8 @@ func TestProvenance1(t *testing.T) {
 					Builder: slsacommon.ProvenanceBuilder{
 						ID: slsa.GithubHostedActionsBuilderID,
 					},
-					BuildType:   testBuildType,
-					BuildConfig: testBuildConfig,
+					BuildType:   gh.TestBuildType,
+					BuildConfig: gh.TestBuildConfig,
 					Invocation: slsa02.ProvenanceInvocation{
 						Environment: map[string]interface{}{
 							"github_run_id":           "12345",

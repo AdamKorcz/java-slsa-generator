@@ -1,4 +1,4 @@
-module slsa-generator
+module github.com/AdamKorcz/java-slsa-generator
 
 go 1.19
 
