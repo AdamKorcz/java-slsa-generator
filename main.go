@@ -8,7 +8,7 @@ import (
 	"os"
 	"strings"
 
-	slsa02 "github.com/in-toto/in-toto-golang/in_toto/slsa_provenance/v0.2"
+	//slsa02 "github.com/in-toto/in-toto-golang/in_toto/slsa_provenance/v0.2"
 	"github.com/rhysd/actionlint"
 	"github.com/slsa-framework/slsa-github-generator/slsa"
 
@@ -25,28 +25,28 @@ var (
 	demoBuilder  = "https://github.com/slsa-framework/slsa-github-generator/.github/workflows/builder_java_slsa3.yml@v1.4.0"
 )
 
-func runToStep(runValue string) []string {
-	return strings.Split(runValue, " ")
-}
-
-func isDeployStep(runValue string) bool {
-	slice := strings.Split(runValue, " ")
-	for _, elem := range slice {
-		if elem == "deploy" {
-			return true
-		}
-	}
-	return false
+type SlsaStep struct {
+	Command    []string `json:"command"`
+	Env        []string `json:"env"`
+	WorkingDir string   `json:"workingDir"`
 }
 
 type BuildConfig struct {
-	version string
-	steps   []SlsaStep
+	Version int        `json:"version"`
+	Steps   []SlsaStep `json:"steps"`
+}
+
+func NewBuildConfig(steps []SlsaStep) BuildConfig {
+	return BuildConfig{
+		Version: 1,
+		Steps:   steps,
+	}
 }
 
 // Input: actionlint.Workflow.Jobs
 // Output: The deploy command
-func getDeployCmd(jobs map[string]*actionlint.Job) string {
+func getSteps(jobs map[string]*actionlint.Job) []SlsaStep {
+	provenanceSteps := make([]SlsaStep, 0)
 	for _, job := range jobs {
 		if len(job.Steps) != 0 {
 			for _, step := range job.Steps {
@@ -56,71 +56,39 @@ func getDeployCmd(jobs map[string]*actionlint.Job) string {
 					switch step.Exec.Kind() {
 					case 0:
 					case 1:
-						if step.Exec.(*actionlint.ExecRun).Run != nil {
-							if isDeployStep(step.Exec.(*actionlint.ExecRun).Run.Value) {
-								return step.Exec.(*actionlint.ExecRun).Run.Value
+						if runCmd := step.Exec.(*actionlint.ExecRun).Run; runCmd != nil {
+							runCmdSlice := strings.Split(runCmd.Value, " ")
+							if len(runCmdSlice) == 0 {
+								continue
 							}
+							if len(runCmdSlice) != 1 && runCmdSlice[len(runCmdSlice)-1] == "deploy" {
+								break
+							}
+							if len(runCmdSlice) != 1 && runCmdSlice[len(runCmdSlice)-1] == "test" {
+								break
+							}
+							provenanceStep := SlsaStep{
+								Command:    strings.Split(runCmd.Value, " "),
+								WorkingDir: demoBuildDir,
+								Env:        []string{"env"},
+							}
+							provenanceSteps = append(provenanceSteps, provenanceStep)
 						}
 					}
 				}
 			}
 		}
 	}
-	return ""
-}
-
-func (b *BuildConfig) addStep(cmd string) {
-	newStep := SlsaStep{
-		command: strings.Split(cmd, " "),
-	}
-	b.steps = append(b.steps, newStep)
-}
-
-func totoSteps(w *actionlint.Workflow) [][]string {
-	cmd := getDeployCmd(w.Jobs)
-
-	steps := make([][]string, 0)
-
-	if cmd != "" {
-		steps = append(steps, strings.Split(cmd, " "))
-	}
-	return steps
-}
-
-// Creates a new buildConfig and adds the steps from the parsed workflow
-func NewBuildConfig() *BuildConfig {
-	b := &BuildConfig{
-		steps:   make([]SlsaStep, 0),
-		version: "1",
-	}
-	return b
-}
-
-func (b *BuildConfig) SetSteps(w *actionlint.Workflow) {
-	dc := getDeployCmd(w.Jobs)
-
-	if dc != "" {
-		fmt.Println("deploy step: ", dc)
-		b.addStep(dc)
-	}
-
-}
-
-type SlsaStep struct {
-	command    []string
-	env        []string
-	workingDir string
-}
-
-func SetTotoProvBuildConfig(predicate *slsa02.ProvenancePredicate, buildConfig interface{}) {
-	predicate.BuildConfig = buildConfig
+	return provenanceSteps
 }
 
 func main() {
 	flag.Parse()
 
 	if *flagYmlFile == "" {
-		panic("A yml file must be specified")
+		fmt.Println("\nPlease specify a .yml file")
+		fmt.Println("The usage is: go run main.go -ymlfile=/path/to/.yml\n")
+		os.Exit(0)
 	}
 
 	b, err := os.ReadFile(*flagYmlFile)
@@ -131,7 +99,6 @@ func main() {
 	if err != nil {
 		panic(ymlErr)
 	}
-	_ = w
 
 	testBuild := gh.NewTestBuild()
 	g := slsa.NewHostedActionsGenerator(testBuild).WithClients(&slsa.NilClientProvider{})
@@ -139,8 +106,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	steps := totoSteps(w)
-	provenance.Predicate.BuildConfig = steps
+	steps := getSteps(w.Jobs)
+	provenance.Predicate.BuildConfig = NewBuildConfig(steps)
 
 	provenanceJson, err := json.MarshalIndent(provenance, "", "\t")
 	if err != nil {

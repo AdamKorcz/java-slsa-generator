@@ -7,7 +7,7 @@ import (
 )
 
 var (
-	TestBuildType   = "http://example.com/v1"
+	TestBuildType   = "https://github.com/slsa-framework/slsa-github-generator/maven@v1"
 	TestBuildConfig = "test build config"
 )
 
