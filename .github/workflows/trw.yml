@@ -1,8 +1,8 @@
 on:
   workflow_call:
-  jobs:
-    demo:
-      runs-on: ubuntu-latest
-        steps:
-        - name: Print something
-          run: echo "hello"
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Print something
+      run: echo "hello"
