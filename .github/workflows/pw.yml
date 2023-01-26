@@ -1,6 +1,8 @@
+---
 name: Demo
-on: [pull_request]
+on:
+  - pull_request
 jobs:
- demo:
-   runs-on: ubuntu-latest
-   uses: .github/workflow/trw.yml@main
+  demo:
+    runs-on: ubuntu-latest
+    uses: .github/workflow/trw.yml@main
