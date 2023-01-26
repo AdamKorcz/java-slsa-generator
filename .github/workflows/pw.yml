@@ -3,6 +3,4 @@ on: [pull_request]
 jobs:
  demo:
    runs-on: ubuntu-latest
-   steps:
-      - name: Print something
-        run: echo "hello"
+   uses: laurentsimon/slsa-delegated-tool/.github/workflows/tool1_slsa3.yml@main
