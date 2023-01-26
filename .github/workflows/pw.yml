@@ -6,3 +6,7 @@ jobs:
   demo:
     runs-on: ubuntu-latest
     uses: ./.github/workflow/trw.yml@main
+  demo2:
+    steps:
+    - name: print something2
+      run: echo "someting22"
