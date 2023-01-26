@@ -10,3 +10,7 @@ jobs:
       run: echo "someting22"
   usetrw:
     uses: ./.github/workflows/trw.yml
+    with:
+      name1: value1
+      name2: value2
+      private-repository: true
