@@ -4,6 +4,7 @@ on:
   - pull_request
 jobs:
   demo2:
+    runs-on: ubuntu-latest
     steps:
     - name: print something2
       run: echo "someting22"
