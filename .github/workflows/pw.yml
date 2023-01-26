@@ -5,4 +5,4 @@ on:
 jobs:
   demo:
     runs-on: ubuntu-latest
-    uses: .github/workflow/trw.yml@main
+    uses: ./.github/workflow/trw.yml@main
