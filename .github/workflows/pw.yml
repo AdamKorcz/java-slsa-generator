@@ -3,9 +3,6 @@ name: Demo
 on:
   - pull_request
 jobs:
-  demo:
-    runs-on: ubuntu-latest
-    uses: ./.github/workflow/trw.yml@main
   demo2:
     steps:
     - name: print something2
