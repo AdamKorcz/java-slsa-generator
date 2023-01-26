@@ -8,3 +8,5 @@ jobs:
     steps:
     - name: print something2
       run: echo "someting22"
+  usetrw:
+    uses: ./.github/workflows/trw.yml
