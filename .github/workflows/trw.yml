@@ -1,8 +1,48 @@
 on:
   workflow_call:
+    inputs:
+      name1:
+        description: "name 1"
+        required: true
+        type: string
+      name2:
+        description: "name 2"
+        required: true
+        type: string
+      private-repository:
+        description: "private"
+        required: false
+        type: boolean
+        default: false
+      provenance-overwrite:
+        description: "overwrite provenance if already present"
+        required: false
+        type: boolean
+        default: false
+      release-tag: #test
+        description: "tag collision with dispatch event"
+        required: false
+        type: string
+        default: "v100"
 jobs:
   demo:
     runs-on: ubuntu-latest
     steps:
     - name: Print something
       run: echo "hello"
+  slsa-setup:
+    permissions:
+      id-token: write # For token creation.
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate the token
+        id: generate
+        uses: laurentsimon/slsa-delegator/actions/setup-token@main
+        with:
+          slsa-workflow-recipient: "delegator_generic_slsa3.yml"
+          slsa-private-repository: true
+          slsa-runner-label: "ubuntu-latest"
+          slsa-build-action-path: "./ymlfiles/builder.yml"
+          slsa-workflow-inputs: ${{ toJson(inputs) }}
+      - name: run echo after slsa-setup
+        run: echo "echo after slsa-setup"
