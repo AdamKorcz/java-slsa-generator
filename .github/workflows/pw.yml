@@ -3,4 +3,4 @@ on: [pull_request]
 jobs:
  demo:
    runs-on: ubuntu-latest
-   uses: laurentsimon/slsa-delegated-tool/.github/workflows/tool1_slsa3.yml@main
+   uses: .github/workflow/trw.yml@main
