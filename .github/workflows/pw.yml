@@ -1,7 +1,7 @@
 ---
 name: Demo
 on:
-  - pull_request
+  - workflow_dispatch
 env:
   GH_TOKEN: ${{ github.token }}
   ISSUE_REPOSITORY: ${{ github.repository }}
