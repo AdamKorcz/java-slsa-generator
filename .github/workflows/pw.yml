@@ -2,10 +2,14 @@
 name: Demo
 on:
   - pull_request
+env:
+  GH_TOKEN: ${{ github.token }}
+  ISSUE_REPOSITORY: ${{ github.repository }}
 jobs:
   demo1:
     runs-on: ubuntu-latest
-    steps:
+    steps:    
+      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
       - id: setup
         uses: slsa-framework/slsa-github-generator/actions/setup-token@main
         with:
