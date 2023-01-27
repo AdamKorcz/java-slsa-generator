@@ -33,6 +33,8 @@ jobs:
   slsa-setup:
     permissions:
       id-token: write # For token creation.
+    outputs:
+      slsa-token: ${{ steps.generate.outputs.slsa-token }}
     runs-on: ubuntu-latest
     steps:
       - name: Generate the token
@@ -46,3 +48,16 @@ jobs:
           slsa-workflow-inputs: ${{ toJson(inputs) }}
       - name: run echo after slsa-setup
         run: echo "echo after slsa-setup"
+  slsa-run:
+    needs: [slsa-setup]
+    permissions:
+      id-token: write # For signing.
+      contents: write # For asset uploads.
+      actions: read   # For the entrypoint.
+      packages: write
+    uses: laurentsimon/slsa-delegator/.github/workflows/delegator_generic_slsa3.yml@main
+    with:
+      slsa-token: ${{ needs.slsa-setup.outputs.slsa-token }}
+    secrets:
+      secret1: ${{ secrets.secret1 }}
+      secret2: ${{ secrets.secret2 }}
