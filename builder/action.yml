@@ -8,10 +8,5 @@ runs:
       shell: bash
       env:
         GHA_PATH: ${{ github.action_path }}
-        ALL_INPUTS: ${{ toJson(inputs.slsa-workflow-inputs) }}
-        INPUT_NAME1: ${{ fromJson(inputs.slsa-workflow-inputs).name1 }}
-        INPUT_NAME2: ${{ fromJson(inputs.slsa-workflow-inputs).name2 }}
-        SECRET1: ${{ inputs.slsa-workflow-secret1 }}
-        SECRET2: ${{ inputs.slsa-workflow-secret2 }}
       run: |
         echo "Running the builder"
