@@ -32,8 +32,10 @@ jobs:
 #          output-predicate: predicate.json
   usetrw:
     permissions:
-      contents: read
+      contents: write
       id-token: write
+      actions: read   # For the entrypoint.
+      packages: write
     uses: ./.github/workflows/trw.yml
     with:
       name1: value1
