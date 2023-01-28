@@ -44,7 +44,7 @@ jobs:
           slsa-workflow-recipient: "delegator_generic_slsa3.yml"
           slsa-private-repository: ${{ inputs.private-repository }}
           slsa-runner-label: "ubuntu-latest"
-          slsa-build-action-path: "AdamKorcz/test-workflow/.github/workflows/test.yml@main"
+          slsa-build-action-path: "./.github/workflows/builder.yml"
           slsa-workflow-inputs: ${{ toJson(inputs) }}
       - name: run echo after slsa-setup
         run: echo "echo after slsa-setup"
