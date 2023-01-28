@@ -9,35 +9,30 @@ env:
   GH_TOKEN: ${{ github.token }}
   ISSUE_REPOSITORY: ${{ github.repository }}
 jobs:
-  test-verify-token:
-    permissions:
-      contents: read
-      id-token: write
-    runs-on: ubuntu-latest
-    steps:    
-      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
-      - id: setup
-        uses: slsa-framework/slsa-github-generator/actions/delegator/setup-token@main
-        with:
-          slsa-workflow-recipient: "delegator_generic_slsa3.yml"
-          slsa-private-repository: true
-          slsa-runner-label: "ubuntu-latest"
-          slsa-build-action-path: "./actions/build-artifacts-composite"
-          slsa-workflow-inputs: '{"name1":"value1","name2":"value2","private-repository":true}'
-      - id: verify
-        uses: slsa-framework/slsa-github-generator/.github/actions/verify-token@main
-        with:
-          slsa-unverified-token: ${{ steps.setup.outputs.slsa-token }}
-          slsa-workflow-recipient: "delegator_generic_slsa3.yml"
-          output-predicate: predicate.json
-#  demo2:
+#  test-verify-token:
+#    permissions:
+#      contents: read
+#      id-token: write
 #    runs-on: ubuntu-latest
-#    steps:
-#    - name: print something2
-#      run: echo "someting22"
-#  usetrw:
-#    uses: ./.github/workflows/trw.yml
-#    with:
-#      name1: value1
-#      name2: value2
-#      private-repository: true
+#    steps:    
+#      - uses: actions/checkout@ac593985615ec2ede58e132d2e21d2b1cbd6127c # v3.3.0
+#      - id: setup
+#        uses: slsa-framework/slsa-github-generator/actions/delegator/setup-token@main
+#        with:
+#          slsa-workflow-recipient: "delegator_generic_slsa3.yml"
+#          slsa-private-repository: true
+#          slsa-runner-label: "ubuntu-latest"
+#          slsa-build-action-path: "./actions/build-artifacts-composite"
+#          slsa-workflow-inputs: '{"name1":"value1","name2":"value2","private-repository":true}'
+#      - id: verify
+#        uses: slsa-framework/slsa-github-generator/.github/actions/verify-token@main
+#        with:
+#          slsa-unverified-token: ${{ steps.setup.outputs.slsa-token }}
+#          slsa-workflow-recipient: "delegator_generic_slsa3.yml"
+#          output-predicate: predicate.json
+  usetrw:
+    uses: ./.github/workflows/trw.yml
+    with:
+      name1: value1
+      name2: value2
+      private-repository: true
