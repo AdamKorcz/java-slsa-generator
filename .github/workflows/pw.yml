@@ -31,6 +31,9 @@ jobs:
 #          slsa-workflow-recipient: "delegator_generic_slsa3.yml"
 #          output-predicate: predicate.json
   usetrw:
+    permissions:
+      contents: read
+      id-token: write
     uses: ./.github/workflows/trw.yml
     with:
       name1: value1
