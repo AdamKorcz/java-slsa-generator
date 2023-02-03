@@ -18,4 +18,4 @@ runs:
         echo "Running the builder"
     - name: Build with Maven
       shell: bash
-      run: mvn package
+      run: mvn package -Pslsa
