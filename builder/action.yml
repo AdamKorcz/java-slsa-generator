@@ -19,3 +19,8 @@ runs:
     - name: Build with Maven
       shell: bash
       run: mvn package -Pslsa
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: '1.20.0'
+      run: go version
