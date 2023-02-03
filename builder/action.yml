@@ -1,28 +1,131 @@
 name: Our builder
 on:
   workflow_call:
+#runs:
+#  using: 'composite'
+#  steps:
+#    - uses: actions/checkout@v3
+#    - name: Set up JDK 17
+#      uses: actions/setup-java@v3
+#      with:
+#        java-version: '17'
+#        distribution: 'temurin'
+#    - name: 'test'
+#      shell: bash
+#      env:
+#        GHA_PATH: ${{ github.action_path }}
+#      run: |
+#        echo "Running the builder"
+#    - name: Build with Maven
+#      shell: bash
+#      run: mvn package
+#    - name: Set up Go
+#      uses: actions/setup-go@v3
+#      with:
+#        go-version: '1.20.0'
+#    - name: 'Test go'
+#      shell: bash
+#      run: go version
 runs:
   using: 'composite'
   steps:
-    - uses: actions/checkout@v3
-    - name: Set up JDK 17
-      uses: actions/setup-java@v3
-      with:
-        java-version: '17'
-        distribution: 'temurin'
     - name: 'test'
       shell: bash
       env:
         GHA_PATH: ${{ github.action_path }}
+        ALL_INPUTS: ${{ toJson(inputs.slsa-workflow-inputs) }}
+        INPUT_NAME1: ${{ fromJson(inputs.slsa-workflow-inputs).name1 }}
+        INPUT_NAME2: ${{ fromJson(inputs.slsa-workflow-inputs).name2 }}
+        SECRET1: ${{ inputs.slsa-workflow-secret1 }}
+        SECRET2: ${{ inputs.slsa-workflow-secret2 }}
       run: |
-        echo "Running the builder"
-    - name: Build with Maven
-      shell: bash
-      run: mvn package
+        echo "GITHUB_ACTION_PATH: $GITHUB_ACTION_PATH"
+        echo "GHA_PATH: $GHA_PATH"
+        echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+        ls "$GITHUB_WORKSPACE"
+        ls
+        pwd
+        tree
+        echo "git status:"
+        git status --short
+        echo "inputs: $ALL_INPUTS"
+        echo "inputs.name1: $INPUT_NAME1"
+        echo "inputs.name2: $INPUT_NAME2"
+        echo "SECRET1: $(echo $SECRET1 | base64 | base64)"
+        echo "SECRET2: $(echo $SECRET2 | base64 | base64)"
     - name: Set up Go
-      uses: actions/setup-go@v3
+      uses: actions/setup-go@c4a742cab115ed795e34d4513e2cf7d472deb55f # v2.2.0
       with:
-        go-version: '1.20.0'
-    - name: 'Test go'
+        go-version: 1.19 # argument to the Action.
+        check-latest: true
+
+    # This would call the main Action, e.g., ./../__TOOL_CHECKOUT_DIR__/<path/to/action>
+    # if path is left empty, the Action's action.yml is located at the root of the repository.
+    - name: Run main action
+      uses: ./../__TOOL_CHECKOUT_DIR__
+      with:
+        name1: ${{ fromJson(inputs.slsa-workflow-inputs).name1 }}
+        name2: ${{ fromJson(inputs.slsa-workflow-inputs).name2 }}
+        password: ${{ inputs.slsa-workflow-secret1 }}
+        pat-token: ${{ inputs.slsa-workflow-secret2 }}
+
+    # Disabled to speed up testing.
+    # - name: run goreleaser
+    #   uses: goreleaser/goreleaser-action@v3
+    #   with:
+    #     args: release --rm-dist
+
+      #uses: ./../__TOOL_CHECKOUT_DIR__
+
+    - name: after goreleaser
       shell: bash
-      run: go version
+      run: |
+        echo done!
+        echo "hello, world" > result.txt
+    - name: Upload result
+      id: upload
+      uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # tag=v3.1.1
+      with:
+        name: "result.txt"
+        path: "result.txt"
+
+    - name: "run"
+      id: generate-outputs
+      env:
+        SLSA_OUTPUTS_ARTIFACTS_FILE: ${{ inputs.slsa-layout-file }}
+      shell: bash
+      run: |
+        hash=$(sha256sum result.txt | awk '{print $1}')
+        echo 
+        echo "SLSA_OUTPUTS_ARTIFACTS_FILE: $SLSA_OUTPUTS_ARTIFACTS_FILE"
+        cat <<EOF >DATA
+        {
+          "version": 1,
+          "attestations": [
+            {
+              "name": "attestation1.intoto",
+              "subjects": [
+                { "name": "result.txt",
+                  "digest": { "sha256": "853ff93762a06ddbf722c4ebe9ddd66d8f63ddaea97f521c3ecc20da7c976020" }},
+                { "name": "artifact12",
+                  "digest": { "sha256": "d4d5899a3868fbb6ae1856c3e55a32ce35913de3956d1973caccd37bd0174fa2" }}
+                ]
+            },
+            {
+              "name": "attestation2.intoto",
+              "subjects": [
+                { "name": "artifact21",
+                  "digest": { "sha256": "0ded0808c4d85f2ee0db86980ae610cc9d165e9ca9da466196cc73c346513713" }},
+                { "name": "artifact22",
+                  "digest": { "sha256": "e363cc5b4e500bfc727106434a2578b38440aa18e105d57576f3d8f2abebf888" }}
+                ]
+            }
+          ]
+        }
+        EOF
+        #TODO: output in file and base64 -w0
+        # NOTE: we relay the output from the inner Action.
+        echo "some-output=tool-defined-some-output" >> "$GITHUB_OUTPUT"
+        echo "other-output=tool-defined-other-output" >> "$GITHUB_OUTPUT"
+        # Expected file with pre-defined output
+        cat DATA > "$SLSA_OUTPUTS_ARTIFACTS_FILE"
