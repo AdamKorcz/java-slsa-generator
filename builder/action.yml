@@ -16,3 +16,5 @@ runs:
         GHA_PATH: ${{ github.action_path }}
       run: |
         echo "Running the builder"
+    - name: Build with Maven
+        run: mvn package
