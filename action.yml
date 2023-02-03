@@ -1,0 +1,32 @@
+name: tool1 main action
+
+description: 'Tool 1 main action'
+
+inputs:
+  name1:
+    description: 'name1'
+    type: string
+    required: true
+
+  name2:
+    description: 'name2'
+    type: string
+    required: true
+
+  password:
+    description: 'password'
+    type: string
+    required: true
+
+  pat-token:
+    description: 'pat-token'
+    type: string
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: 'test'
+      shell: bash
+      run: |
+        echo "!! main Action !!"
