@@ -17,4 +17,5 @@ runs:
       run: |
         echo "Running the builder"
     - name: Build with Maven
+      shell: bash
       run: mvn package
