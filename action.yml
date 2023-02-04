@@ -28,5 +28,4 @@ runs:
   steps:
     - name: 'test'
       shell: bash
-      run: |
-        echo "!! main Action !!"
+      run: mvn package
