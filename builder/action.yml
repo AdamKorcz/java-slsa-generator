@@ -108,7 +108,7 @@ runs:
               "name": "attestation1.intoto",
               "subjects": [
                 { "name": "test-project-0.1.0.jar",
-                  "digest": { "sha256": hash }
+                  "digest": { "sha256": ${hash} }
                 }
                 ]
             }
