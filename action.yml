@@ -28,9 +28,9 @@ runs:
   steps:
     - name: 'test'
       shell: bash
-      run: mvn package && ls -la target
-    - name: Upload artifact
-      uses: actions/upload-artifact@v3
-      with:
-        name: test-project-0.1.0.jar
-        path: target/gs-maven-0.1.0.jar
+      run: mvn package # && ls -la target
+#    - name: Upload artifact
+#      uses: actions/upload-artifact@v3
+#      with:
+#        name: test-project-0.1.0.jar
+#        path: target/gs-maven-0.1.0.jar
