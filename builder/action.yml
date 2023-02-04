@@ -1,31 +1,6 @@
 name: Our builder
 on:
   workflow_call:
-#runs:
-#  using: 'composite'
-#  steps:
-#    - uses: actions/checkout@v3
-#    - name: Set up JDK 17
-#      uses: actions/setup-java@v3
-#      with:
-#        java-version: '17'
-#        distribution: 'temurin'
-#    - name: 'test'
-#      shell: bash
-#      env:
-#        GHA_PATH: ${{ github.action_path }}
-#      run: |
-#        echo "Running the builder"
-#    - name: Build with Maven
-#      shell: bash
-#      run: mvn package
-#    - name: Set up Go
-#      uses: actions/setup-go@v3
-#      with:
-#        go-version: '1.20.0'
-#    - name: 'Test go'
-#      shell: bash
-#      run: go version
 runs:
   using: 'composite'
   steps:
