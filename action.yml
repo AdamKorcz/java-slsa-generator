@@ -28,7 +28,7 @@ runs:
   steps:
     - name: 'test'
       shell: bash
-      run: mvn package
+      run: mvn package && ls && ls target
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
