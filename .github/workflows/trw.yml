@@ -80,7 +80,7 @@ jobs:
           echo "download from $SLSA_ATTESTATION_DOWNLOAD_NAME"
           # TODO: Verify thru slsa-verifier
       - name: Upload the provenance
-        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
+        uses: actions/upload-artifact@v3
         with:
           files: |
             *.sigstore
