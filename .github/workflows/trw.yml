@@ -63,7 +63,7 @@ jobs:
       secret2: ${{ secrets.secret2 }}
   slsa-publish:
     needs: [slsa-run]
-    if: startsWith(github.ref, 'refs/tags/')
+    #if: startsWith(github.ref, 'refs/tags/')
     permissions:
       contents: write # For asset uploads. Optional
     runs-on: ubuntu-latest
