@@ -87,6 +87,8 @@ runs:
       uses: actions/download-artifact@v1
       with:
         name: test-project-0.1.0.jar
+      - name: Display structure of downloaded files
+        run: ls -R
 
     - name: "run"
       id: generate-outputs
