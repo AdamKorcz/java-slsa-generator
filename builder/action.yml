@@ -53,11 +53,11 @@ runs:
         echo "inputs.name2: $INPUT_NAME2"
         echo "SECRET1: $(echo $SECRET1 | base64 | base64)"
         echo "SECRET2: $(echo $SECRET2 | base64 | base64)"
-    - name: Set up Go
-      uses: actions/setup-go@c4a742cab115ed795e34d4513e2cf7d472deb55f # v2.2.0
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
       with:
-        go-version: 1.19 # argument to the Action.
-        check-latest: true
+        java-version: '17'
+        distribution: 'temurin'
 
     # This would call the main Action, e.g., ./../__TOOL_CHECKOUT_DIR__/<path/to/action>
     # if path is left empty, the Action's action.yml is located at the root of the repository.
@@ -77,17 +77,17 @@ runs:
 
       #uses: ./../__TOOL_CHECKOUT_DIR__
 
-    - name: after goreleaser
-      shell: bash
-      run: |
-        echo done!
-        echo "hello, world" > result.txt
+    #- name: after goreleaser
+    #  shell: bash
+    #  run: |
+    #    echo done!
+    #    echo "hello, world" > result.txt
     - name: Upload result
       id: upload
       uses: actions/upload-artifact@83fd05a356d7e2593de66fc9913b3002723633cb # tag=v3.1.1
       with:
-        name: "result.txt"
-        path: "result.txt"
+        name: "test-project-0.1.0.jar"
+        path: "target/test-project-0.1.0.jar"
 
     - name: "run"
       id: generate-outputs
@@ -95,7 +95,7 @@ runs:
         SLSA_OUTPUTS_ARTIFACTS_FILE: ${{ inputs.slsa-layout-file }}
       shell: bash
       run: |
-        hash=$(sha256sum result.txt | awk '{print $1}')
+        hash=$(sha256sum target/test-project-0.1.0.jar | awk '{print $1}')
         echo 
         echo "SLSA_OUTPUTS_ARTIFACTS_FILE: $SLSA_OUTPUTS_ARTIFACTS_FILE"
         cat <<EOF >DATA
@@ -105,19 +105,9 @@ runs:
             {
               "name": "attestation1.intoto",
               "subjects": [
-                { "name": "result.txt",
-                  "digest": { "sha256": "853ff93762a06ddbf722c4ebe9ddd66d8f63ddaea97f521c3ecc20da7c976020" }},
-                { "name": "artifact12",
-                  "digest": { "sha256": "d4d5899a3868fbb6ae1856c3e55a32ce35913de3956d1973caccd37bd0174fa2" }}
-                ]
-            },
-            {
-              "name": "attestation2.intoto",
-              "subjects": [
-                { "name": "artifact21",
-                  "digest": { "sha256": "0ded0808c4d85f2ee0db86980ae610cc9d165e9ca9da466196cc73c346513713" }},
-                { "name": "artifact22",
-                  "digest": { "sha256": "e363cc5b4e500bfc727106434a2578b38440aa18e105d57576f3d8f2abebf888" }}
+                { "name": "test-project-0.1.0.jar",
+                  "digest": { "sha256": hash }
+                }
                 ]
             }
           ]
