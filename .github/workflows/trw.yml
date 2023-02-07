@@ -9,7 +9,7 @@ on:
         description: "name 2"
         required: true
         type: string
-      private-repository:
+      rekor-log-public:
         description: "private"
         required: false
         type: boolean
@@ -42,7 +42,7 @@ jobs:
         uses: slsa-framework/slsa-github-generator/actions/delegator/setup-token@main
         with:
           slsa-workflow-recipient: "delegator_generic_slsa3.yml"
-          slsa-rekor-log-public: ${{ inputs.private-repository }}
+          slsa-rekor-log-public: ${{ inputs.rekor-log-public }}
           slsa-runner-label: "ubuntu-latest"
           slsa-build-action-path: "./builder"
           slsa-workflow-inputs: ${{ toJson(inputs) }}
