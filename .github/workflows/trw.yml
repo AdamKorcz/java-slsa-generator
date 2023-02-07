@@ -42,7 +42,7 @@ jobs:
         uses: slsa-framework/slsa-github-generator/actions/delegator/setup-token@main
         with:
           slsa-workflow-recipient: "delegator_generic_slsa3.yml"
-          slsa-private-repository: ${{ inputs.private-repository }}
+          slsa-rekor-log-public: ${{ inputs.private-repository }}
           slsa-runner-label: "ubuntu-latest"
           slsa-build-action-path: "./builder"
           slsa-workflow-inputs: ${{ toJson(inputs) }}
