@@ -4,30 +4,30 @@ on:
 runs:
   using: 'composite'
   steps:
-    - name: 'test'
-      shell: bash
-      env:
-        GHA_PATH: ${{ github.action_path }}
-        ALL_INPUTS: ${{ toJson(inputs.slsa-workflow-inputs) }}
-        INPUT_NAME1: ${{ fromJson(inputs.slsa-workflow-inputs).name1 }}
-        INPUT_NAME2: ${{ fromJson(inputs.slsa-workflow-inputs).name2 }}
-        SECRET1: ${{ inputs.slsa-workflow-secret1 }}
-        SECRET2: ${{ inputs.slsa-workflow-secret2 }}
-      run: |
-        echo "GITHUB_ACTION_PATH: $GITHUB_ACTION_PATH"
-        echo "GHA_PATH: $GHA_PATH"
-        echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
-        ls "$GITHUB_WORKSPACE"
-        ls
-        pwd
-        tree
-        echo "git status:"
-        git status --short
-        echo "inputs: $ALL_INPUTS"
-        echo "inputs.name1: $INPUT_NAME1"
-        echo "inputs.name2: $INPUT_NAME2"
-        echo "SECRET1: $(echo $SECRET1 | base64 | base64)"
-        echo "SECRET2: $(echo $SECRET2 | base64 | base64)"
+    #- name: 'test'
+    #  shell: bash
+    #  env:
+    #    GHA_PATH: ${{ github.action_path }}
+    #    ALL_INPUTS: ${{ toJson(inputs.slsa-workflow-inputs) }}
+    #    INPUT_NAME1: ${{ fromJson(inputs.slsa-workflow-inputs).name1 }}
+    #    INPUT_NAME2: ${{ fromJson(inputs.slsa-workflow-inputs).name2 }}
+    #    SECRET1: ${{ inputs.slsa-workflow-secret1 }}
+    #    SECRET2: ${{ inputs.slsa-workflow-secret2 }}
+    #  run: |
+    #    echo "GITHUB_ACTION_PATH: $GITHUB_ACTION_PATH"
+    #    echo "GHA_PATH: $GHA_PATH"
+    #    echo "GITHUB_WORKSPACE: $GITHUB_WORKSPACE"
+    #    ls "$GITHUB_WORKSPACE"
+    #    ls
+    #    pwd
+    #    tree
+    #    echo "git status:"
+    #    git status --short
+    #    echo "inputs: $ALL_INPUTS"
+    #    echo "inputs.name1: $INPUT_NAME1"
+    #    echo "inputs.name2: $INPUT_NAME2"
+    #    echo "SECRET1: $(echo $SECRET1 | base64 | base64)"
+    #    echo "SECRET2: $(echo $SECRET2 | base64 | base64)"
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -44,27 +44,16 @@ runs:
         password: ${{ inputs.slsa-workflow-secret1 }}
         pat-token: ${{ inputs.slsa-workflow-secret2 }}
 
-    # Disabled to speed up testing.
-    # - name: run goreleaser
-    #   uses: goreleaser/goreleaser-action@v3
-    #   with:
-    #     args: release --rm-dist
-
-      #uses: ./../__TOOL_CHECKOUT_DIR__
-
-    #- name: after goreleaser
-    #  shell: bash
-    #  run: |
-    #    echo done!
-    #    echo "hello, world" > result.txt
+    # Here we would possibly run jreleaser
+    
     - name: Download Artifact
       id: download-artifact
       uses: actions/download-artifact@v1
       with:
         name: test-project-0.1.0.jar
-    - name: Display structure of downloaded files
-      shell: bash
-      run: ls -R
+    #- name: Display structure of downloaded files
+    #  shell: bash
+    #  run: ls -R
 
     - name: "run"
       id: generate-outputs
