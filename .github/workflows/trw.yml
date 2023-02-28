@@ -30,7 +30,7 @@ jobs:
     steps:
     - name: Print something
       run: echo "hello"
-  slsa-setup:
+  slsa-run:
     permissions:
       id-token: write # For token creation.
     outputs:
