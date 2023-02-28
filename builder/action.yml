@@ -47,11 +47,11 @@ runs:
 
     # Here we would possibly run jreleaser
     
-    - name: Download Artifact
-      id: download-artifact
-      uses: actions/download-artifact@v1
-      with:
-        name: test-project-0.1.0.jar
+    #- name: Download Artifact
+    #  id: download-artifact
+    #  uses: actions/download-artifact@v1
+    #  with:
+    #    name: test-project-0.1.0.jar
     #- name: Display structure of downloaded files
     #  shell: bash
     #  run: ls -R
