@@ -60,8 +60,8 @@ runs:
         cat <<EOF >DATA
         #!/bin/bash
 
-        STR="{\n  \"version\": 1,\n  \"attestations\": ["
-        echo -e -n $STR
+        echo -e -n "{\n  \"version\": 1,\n  \"attestations\": ["
+        #echo -e -n $STR
 
         NUM_JAR_FILES=$(find ./target -type f -name "*jar" | wc -l)
         #echo $NUM_JAR_FILES
