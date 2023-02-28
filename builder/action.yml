@@ -94,7 +94,7 @@ runs:
         echo "some-output=tool-defined-some-output" >> "$GITHUB_OUTPUT"
         echo "other-output=tool-defined-other-output" >> "$GITHUB_OUTPUT"
         # Expected file with pre-defined output
-        cat DATA run.sh
+        cat DATA > run.sh
         chmod +x run.sh
         ./run.sh > "$SLSA_OUTPUTS_ARTIFACTS_FILE"
       #cat DATA > "$SLSA_OUTPUTS_ARTIFACTS_FILE"
