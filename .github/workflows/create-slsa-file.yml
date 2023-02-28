@@ -19,7 +19,7 @@ jobs:
       run: ls
     - name: Run mvn package
       shell: bash
-      run: mvn package # && ls -la target
+      run: cd test-java-project && mvn package # && ls -la target
       
     - name: Set up Go
       uses: actions/setup-go@v3
@@ -27,7 +27,7 @@ jobs:
         go-version: '>=1.20.0'
         
     - name: Run Go script
-      run: go run ./create-slsa-file/main.go $(find ./target -type f -name "*.jar")
+      run: go run ./create-slsa-file/main.go $(find ./test-java-project/target -type f -name "*.jar")
 
 
 #on:
