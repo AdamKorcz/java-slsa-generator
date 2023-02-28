@@ -9,6 +9,9 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+    - name: Run ls
+      shell: bash
+      run: ls
     - name: Run mvn package
       shell: bash
       run: mvn package # && ls -la target
