@@ -4,6 +4,8 @@ on:
 runs:
   using: 'composite'
   steps:
+    - name: Checkout private tools
+      uses: actions/checkout@v3
     #- name: 'test'
     #  shell: bash
     #  env:
