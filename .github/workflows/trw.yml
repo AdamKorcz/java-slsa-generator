@@ -55,10 +55,14 @@ jobs:
       contents: write # For asset uploads.
       actions: read   # For the entrypoint.
       packages: write
-    uses: slsa-framework/slsa-github-generator/.github/workflows/delegator_generic_slsa3.yml@main
-    with:
-      slsa-token: ${{ needs.slsa-setup.outputs.slsa-token }}
-    secrets:
-      secret1: ${{ secrets.secret1 }}
-      secret2: ${{ secrets.secret2 }}
+    steps:
+      - name: Print before running delegator
+        run: echo "before running delegator"
+      - name: Run generic delegator
+        uses: slsa-framework/slsa-github-generator/.github/workflows/delegator_generic_slsa3.yml@main
+        with:
+          slsa-token: ${{ needs.slsa-setup.outputs.slsa-token }}
+        secrets:
+          secret1: ${{ secrets.secret1 }}
+          secret2: ${{ secrets.secret2 }}
 
