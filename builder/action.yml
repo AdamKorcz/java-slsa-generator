@@ -54,6 +54,8 @@ runs:
         SLSA_OUTPUTS_ARTIFACTS_FILE: ${{ inputs.slsa-layout-file }}
       shell: bash
       run: |
+        ls
+        find target -type f -name "*jar"
         hash=$(sha256sum ./target/gs-maven-0.1.0.jar | awk '{print $1}')
         echo 
         echo "SLSA_OUTPUTS_ARTIFACTS_FILE: $SLSA_OUTPUTS_ARTIFACTS_FILE"
@@ -63,7 +65,7 @@ runs:
         echo -e -n "{\n  \"version\": 1,\n  \"attestations\": ["
         #echo -e -n $STR
 
-        NUM_JAR_FILES=$(find ./target -type f -name "*jar" | wc -l)
+        NUM_JAR_FILES=$(find target -type f -name "*jar" | wc -l)
         #echo $NUM_JAR_FILES
         COUNTER=1
         find ./target -type f -name "*.jar"|while read fname; do
