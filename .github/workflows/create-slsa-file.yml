@@ -29,10 +29,14 @@ jobs:
     - name: Run Go script
       run: go run ./test-java-project/create-slsa-file/main.go $(find ./test-java-project/target -type f -name "*.jar")
     
-    - name: Upload artifacts
+    - name: Upload all created .jar artifacts
       uses: actions/upload-artifact@v3
       with:
         path: ./test-java-project/target/*.jar
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: '>=1.20.0'
 
 
 #on:
