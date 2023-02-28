@@ -43,6 +43,11 @@ runs:
       uses: actions/upload-artifact@v3
       with:
         path: target/*.jar
+        
+    - name: Set up Go
+      uses: actions/setup-go@v3
+      with:
+        go-version: '>=1.20.0'
 
     # Here we would possibly run jreleaser
     
