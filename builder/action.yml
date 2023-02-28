@@ -50,7 +50,7 @@ runs:
         go-version: '>=1.20.0'
     
     - name: Find all create .jar files
-      uses: ./.github/workflows/create-slsa-output-file/action.yml@main
+      uses: AdamKorcz/java-slsa-generator/.github/workflows/create-slsa-output-file/action.yml@main
 
     # Here we would possibly run jreleaser
     
