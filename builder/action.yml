@@ -42,8 +42,7 @@ runs:
     - name: Upload built artifacts from mvn package
       uses: actions/upload-artifact@v3
       with:
-        name: test-project-0.1.0.jar
-        path: target/gs-maven-0.1.0.jar
+        path: target/*.jar
 
     # Here we would possibly run jreleaser
     
