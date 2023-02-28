@@ -1,7 +1,7 @@
 on:
   workflow_call:
 jobs:
-  Create SLSA file:
+  create-slsa-file:
     runs-on: ubuntu-latest
     steps:
     - name: Set up JDK 17
