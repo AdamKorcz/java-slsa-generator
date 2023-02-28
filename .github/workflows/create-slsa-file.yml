@@ -9,6 +9,11 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+    - name: Checkout repo
+      uses: actions/checkout@v3
+      with:
+        repository: AdamKorcz/test-java-project
+        path: test-java-project
     - name: Run ls
       shell: bash
       run: ls
