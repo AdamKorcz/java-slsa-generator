@@ -7,7 +7,8 @@ runs:
     - name: Checkout
       uses: actions/checkout@v3
       with:
-        path: main
+        repository: AdamKorcz/java-slsa-generator
+        path: java-slsa-generator
     #- name: 'test'
     #  shell: bash
     #  env:
