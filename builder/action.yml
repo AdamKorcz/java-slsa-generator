@@ -60,7 +60,7 @@ runs:
         cat <<EOF >DATA
         #!/bin/bash
 
-        echo -e -n "{\n  \"version\": 1,\n  \"attestations\": ["
+        echo -e -n "{\n  \"version\": 1,\n  \"attestations\": [" > "$SLSA_OUTPUTS_ARTIFACTS_FILE"
         #echo -e -n $STR
 
         NUM_JAR_FILES=$(find ./target -type f -name "*jar" | wc -l)
