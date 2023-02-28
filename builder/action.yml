@@ -57,8 +57,8 @@ runs:
     - name: Get pwd
       shell: bash
       run: pwd
-    #- name: Find all create .jar files
-    #  uses: AdamKorcz/java-slsa-generator/.github/actions/create-slsa-output-file/action.yml@main
+    - name: Find all create .jar files
+      uses: AdamKorcz/java-slsa-generator/.github/actions/create-slsa-output-file/action.yml@main
 
     # Here we would possibly run jreleaser
     
