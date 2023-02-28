@@ -58,7 +58,6 @@ jobs:
     uses: slsa-framework/slsa-github-generator/.github/workflows/delegator_generic_slsa3.yml@main
     with:
       slsa-token: ${{ needs.slsa-setup.outputs.slsa-token }}
-      continue-on-error: true
     #secrets:
     #  secret1: ${{ secrets.secret1 }}
     #  secret2: ${{ secrets.secret2 }}
