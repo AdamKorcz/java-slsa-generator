@@ -4,11 +4,6 @@ on:
 runs:
   using: 'composite'
   steps:
-    - name: Checkout
-      uses: actions/checkout@v3
-      with:
-        repository: AdamKorcz/java-slsa-generator
-        path: java-slsa-generator
     - name: Set up JDK 17
       uses: actions/setup-java@v3
       with:
@@ -16,7 +11,7 @@ runs:
         distribution: 'temurin'
     - name: Run mvn package
       shell: bash
-      run: mvn package # && ls -la target
+      run: mvn package
     - name: Upload built artifacts from mvn package
       uses: actions/upload-artifact@v3
       with:
@@ -28,20 +23,11 @@ runs:
       shell: bash
       run: |
         ls
-        find target -type f -name "*jar"
-        #hash=$(sha256sum ./target/gs-maven-0.1.0.jar | awk '{print $1}')
         echo "SLSA_OUTPUTS_ARTIFACTS_FILE: $SLSA_OUTPUTS_ARTIFACTS_FILE"
-        find target -name "*.jar" -print0 | while read -d $'\0' file
-        do
-          echo "First file: ${file}"
-          echo "First basename: $(basename -- $file)"
-        done
-        
         
         echo -e -n "{\n  \"version\": 1,\n  \"attestations\": [" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
 
         NUM_JAR_FILES=$(find target -type f -name "*jar" | wc -l)
-        echo num jar files: $NUM_JAR_FILES
         COUNTER=1
         
         find target -name "*.jar" -print0 | while read -d $'\0' fname
@@ -64,8 +50,7 @@ runs:
           if [[ "$COUNTER" != "$NUM_JAR_FILES" ]]; then
             echo -n "," >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
           fi
-
-
+          
           COUNTER=$[$COUNTER +1]
         done
 
