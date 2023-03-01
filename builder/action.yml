@@ -60,7 +60,7 @@ runs:
           
           echo -n "
               {
-                \"name\": \"attestation${COUNTER}.intoto\",
+                \"name\": \"${bn}-attestation.intoto\",
                 \"subjects\": [
                   { \"name\": \"${bn}\",
                   \"digest\": { \"sha256\": \"${hash}\"  }
