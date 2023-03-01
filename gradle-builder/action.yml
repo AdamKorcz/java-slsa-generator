@@ -48,7 +48,7 @@ runs:
         # "version" and "attestations" fields:
         echo -e -n "{\n  \"version\": 1,\n  \"attestations\": [" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
 
-        NUM_JAR_FILES=$(find target -type f -name "*jar" | wc -l)
+        NUM_JAR_FILES=$(find ./build/libs -type f -name "*jar" | wc -l)
         COUNTER=1
         
         # Add one attestation per .jar file:
