@@ -100,7 +100,8 @@ runs:
         cat DATA > run.sh
         chmod +x run.sh
         ./run.sh > "$SLSA_OUTPUTS_ARTIFACTS_FILE"
-      #cat DATA > "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+        #cat DATA > "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+        cat "$SLSA_OUTPUTS_ARTIFACTS_FILE"
 
     # Here we would possibly run jreleaser
     
