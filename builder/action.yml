@@ -1,7 +1,23 @@
 name: Our builder
 inputs:
+  # BYOB-provided inputs
+  slsa-workflow-inputs:
+    # Inputs in JSON format.
+    description: 'All the onputs'
+    type: string
+    required: true
   slsa-layout-file:
     description: 'Location to store the layout content'
+    type: string
+    required: true
+  
+  slsa-workflow-secret1:
+    description: 'secret1'
+    type: string
+    required: true
+
+  slsa-workflow-secret2:
+    description: 'secret2'
     type: string
     required: true
 on:
