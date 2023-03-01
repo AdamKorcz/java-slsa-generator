@@ -56,13 +56,8 @@ runs:
       run: |
         ls
         find target -type f -name "*jar"
-        hash=$(sha256sum ./target/gs-maven-0.1.0.jar | awk '{print $1}')
-        echo 
+        #hash=$(sha256sum ./target/gs-maven-0.1.0.jar | awk '{print $1}')
         echo "SLSA_OUTPUTS_ARTIFACTS_FILE: $SLSA_OUTPUTS_ARTIFACTS_FILE"
-        cd target
-        find . -type f -name "*.jar"|while read fname; do
-          echo "fname: ${fname}"
-        done
         cat <<EOF >DATA
         #!/bin/bash
 
@@ -72,14 +67,15 @@ runs:
         NUM_JAR_FILES=$(find target -type f -name "*jar" | wc -l)
         #echo $NUM_JAR_FILES
         COUNTER=1
-        cd target
-        find . -type f -name "*.jar"|while read fname; do
+        find target -type f -name "*.jar"|while read fname; do
           #echo $COUNTER
+          bn="$(basename -- $fname)"
+          echo "basename: ${bn}"
           hash=$(sha256sum $fname | awk '{print $1}')
           echo $file
           echo -e -n "\n    {\n      \"name\": \"attestation1.intoto\","
           echo -e -n "\n      \"subjects\": ["
-          echo -e -n "\n        { \"name\": \"${fname}\","
+          echo -e -n "\n        { \"name\": \"${bn}\","
           echo -e -n "\n        \"digest\": { \"sha256\": \"${hash}\" }"
           echo -e -n "\n        }\n      ]\n    }"
 
@@ -94,7 +90,6 @@ runs:
         echo -e "\n  ]"
         echo "}"
         echo -e "\n"
-        cd ..
         EOF
         #TODO: output in file and base64 -w0
         # NOTE: we relay the output from the inner Action.
