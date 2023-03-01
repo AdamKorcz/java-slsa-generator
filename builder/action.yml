@@ -1,4 +1,9 @@
 name: Our builder
+inputs:
+  slsa-layout-file:
+    description: 'Location to store the layout content'
+    type: string
+    required: true
 on:
   workflow_call:
 runs:
