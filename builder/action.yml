@@ -73,9 +73,10 @@ runs:
           #echo $COUNTER
           hash=$(sha256sum $fname | awk '{print $1}')
           #echo "$fname"
+          echo $file
           echo -e -n "\n    {\n      \"name\": \"attestation1.intoto\","
           echo -e -n "\n      \"subjects\": ["
-          echo -e -n "\n        { \"name\": \"$file\","
+          echo -e -n "\n        { \"name\": \"${file}\","
           echo -e -n "\n        \"digest\": { \"sha256\": \"${hash}\" }"
           echo -e -n "\n        }\n      ]\n    }"
 
