@@ -68,15 +68,16 @@ runs:
         NUM_JAR_FILES=$(find target -type f -name "*jar" | wc -l)
         #echo $NUM_JAR_FILES
         COUNTER=1
-        find ./target -type f -name "*.jar"|while read fname; do
-          file="$(basename -- $fname)"
+        cd target
+        find . -type f -name "*.jar"|while read fname; do
+          # file="$(basename -- $fname)"
           #echo $COUNTER
           hash=$(sha256sum $fname | awk '{print $1}')
           #echo "$fname"
           echo $file
           echo -e -n "\n    {\n      \"name\": \"attestation1.intoto\","
           echo -e -n "\n      \"subjects\": ["
-          echo -e -n "\n        { \"name\": \"${file}\","
+          echo -e -n "\n        { \"name\": \"${fname}\","
           echo -e -n "\n        \"digest\": { \"sha256\": \"${hash}\" }"
           echo -e -n "\n        }\n      ]\n    }"
 
@@ -91,6 +92,7 @@ runs:
         echo -e "\n  ]"
         echo "}"
         echo -e "\n"
+        cd ..
         EOF
         #TODO: output in file and base64 -w0
         # NOTE: we relay the output from the inner Action.
