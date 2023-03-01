@@ -76,9 +76,9 @@ runs:
         #find target -type f -name "*jar"|while read fname; do
         find target -name "*.jar" -print0 | while read -d $'\0' fname
         do
-          echo "fname: {$fname}"
+          echo "fname: ${fname}"
           #echo $COUNTER
-          bn="$(basename -- $fname)"
+          bn=$(basename -- $fname)
           echo "basename: ${bn}"
           hash=$(sha256sum $fname | awk '{print $1}')
           echo $file
