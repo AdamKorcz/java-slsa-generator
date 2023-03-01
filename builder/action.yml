@@ -67,7 +67,7 @@ runs:
         NUM_JAR_FILES=$(find target -type f -name "*jar" | wc -l)
         #echo $NUM_JAR_FILES
         COUNTER=1
-        find target -type f -name "*.jar"|while read fname; do
+        find target -type f -name "*jar"|while read fname; do
           echo "fname: {$fname}"
           #echo $COUNTER
           bn="$(basename -- $fname)"
