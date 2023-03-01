@@ -59,6 +59,10 @@ runs:
         hash=$(sha256sum ./target/gs-maven-0.1.0.jar | awk '{print $1}')
         echo 
         echo "SLSA_OUTPUTS_ARTIFACTS_FILE: $SLSA_OUTPUTS_ARTIFACTS_FILE"
+        cd target
+        find . -type f -name "*.jar"|while read fname; do
+          echo "fname: ${fname}"
+        done
         cat <<EOF >DATA
         #!/bin/bash
 
