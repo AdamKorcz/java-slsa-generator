@@ -80,7 +80,7 @@ runs:
           
           echo -n "
               {
-                \"name\": \"attestation1.intoto\",
+                \"name\": \"attestation${COUNTER}.intoto\",
                 \"subjects\": [
                   { \"name\": \"${bn}\",
                   \"digest\": { \"sha256\": \"${hash}\"  }
@@ -88,7 +88,7 @@ runs:
                 ]
               }" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
           # This works:
-          #echo -e -n "\n    {\n      \"name\": \"attestation1.intoto\"," >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+          #echo -e -n "\n    {\n      \"name\": \"attestation${COUNTER}.intoto\"," >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
           #echo -e -n "\n      \"subjects\": [" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
           #echo -e -n "\n        { \"name\": \"${bn}\"," >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
           #echo -e -n "\n        \"digest\": { \"sha256\": \"${hash}\" }" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
