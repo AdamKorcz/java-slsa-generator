@@ -10,16 +10,15 @@ inputs:
     description: 'Location to store the layout content'
     type: string
     required: true
-  
   slsa-workflow-secret1:
     description: 'secret1'
     type: string
     required: true
-
   slsa-workflow-secret2:
     description: 'secret2'
     type: string
     required: true
+
 on:
   workflow_call:
 runs:
