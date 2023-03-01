@@ -42,18 +42,16 @@ runs:
         SLSA_OUTPUTS_ARTIFACTS_FILE: ${{ inputs.slsa-layout-file }}
       shell: bash
       run: |
-        ls
-        echo "SLSA_OUTPUTS_ARTIFACTS_FILE: $SLSA_OUTPUTS_ARTIFACTS_FILE"
-        
+        # "version" and "attestations" fields:
         echo -e -n "{\n  \"version\": 1,\n  \"attestations\": [" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
 
         NUM_JAR_FILES=$(find target -type f -name "*jar" | wc -l)
         COUNTER=1
         
+        # Add one attestation per .jar file:
         find target -name "*.jar" -print0 | while read -d $'\0' fname
         do
           
-          # This works:
           bn=$(basename -- $fname)
           hash=$(sha256sum $fname | awk '{print $1}')
           
@@ -73,6 +71,7 @@ runs:
           
           COUNTER=$[$COUNTER +1]
         done
-
+        
+        # Close "attestations" and "version":
         echo -e "\n  ]" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
         echo "}" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
