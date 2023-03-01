@@ -58,6 +58,12 @@ runs:
         find target -type f -name "*jar"
         #hash=$(sha256sum ./target/gs-maven-0.1.0.jar | awk '{print $1}')
         echo "SLSA_OUTPUTS_ARTIFACTS_FILE: $SLSA_OUTPUTS_ARTIFACTS_FILE"
+        find target -name "*.jar" -print0 | while read -d $'\0' file
+        do
+          echo "First file: ${file}"
+          echo "First basename: $(basename -- $file)"
+        done
+        
         cat <<EOF >DATA
         #!/bin/bash
 
