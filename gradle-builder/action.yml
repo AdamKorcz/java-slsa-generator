@@ -1,0 +1,78 @@
+name: Our builder
+inputs:
+  # BYOB-provided inputs
+  slsa-workflow-inputs:
+    # Inputs in JSON format.
+    description: 'All the onputs'
+    type: string
+    required: true
+  slsa-layout-file:
+    description: 'Location to store the layout content'
+    type: string
+    required: true
+  slsa-workflow-secret1:
+    description: 'secret1'
+    type: string
+    required: true
+  slsa-workflow-secret2:
+    description: 'secret2'
+    type: string
+    required: true
+
+on:
+  workflow_call:
+runs:
+  using: 'composite'
+  steps:
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+    - name: Run mvn package
+      shell: bash
+      run: ./gradlew build
+    - name: Upload built artifacts from gradlew build
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./build/libs/*.jar
+    - name: Make outputs
+      id: make-outputs
+      env:
+        SLSA_OUTPUTS_ARTIFACTS_FILE: ${{ inputs.slsa-layout-file }}
+      shell: bash
+      run: |
+        # "version" and "attestations" fields:
+        echo -e -n "{\n  \"version\": 1,\n  \"attestations\": [" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+
+        NUM_JAR_FILES=$(find target -type f -name "*jar" | wc -l)
+        COUNTER=1
+        
+        # Add one attestation per .jar file:
+        find ./build/libs -name "*.jar" -print0 | while read -d $'\0' fname
+        do
+          
+          bn=$(basename -- $fname)
+          hash=$(sha256sum $fname | awk '{print $1}')
+          
+          echo -n "
+              {
+                \"name\": \"${bn}-attestation.intoto\",
+                \"subjects\": [
+                  { \"name\": \"${bn}\",
+                  \"digest\": { \"sha256\": \"${hash}\"  }
+                  }
+                ]
+              }" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+          
+          # Add comma between attestations and not after the last
+          if [[ "$COUNTER" != "$NUM_JAR_FILES" ]]; then
+            echo -n "," >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+          fi
+          
+          COUNTER=$[$COUNTER +1]
+        done
+        
+        # Close "attestations" and "version":
+        echo -e "\n  ]" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+        echo "}" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
