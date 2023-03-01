@@ -64,16 +64,13 @@ runs:
           echo "First basename: $(basename -- $file)"
         done
         
-        cat <<EOF >DATA
-        #!/bin/bash
-
-        echo -e -n "{\n  \"version\": 1,\n  \"attestations\": ["
-        #echo -e -n $STR
+        
+        echo -e -n "{\n  \"version\": 1,\n  \"attestations\": [" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
 
         NUM_JAR_FILES=$(find target -type f -name "*jar" | wc -l)
-        #echo $NUM_JAR_FILES
+        echo num jar files: $NUM_JAR_FILES
         COUNTER=1
-        #find target -type f -name "*jar"|while read fname; do
+        
         find target -name "*.jar" -print0 | while read -d $'\0' fname
         do
           echo "fname: ${fname}"
@@ -82,34 +79,71 @@ runs:
           echo "basename: ${bn}"
           hash=$(sha256sum $fname | awk '{print $1}')
           echo $file
-          echo -e -n "\n    {\n      \"name\": \"attestation1.intoto\","
-          echo -e -n "\n      \"subjects\": ["
-          echo -e -n "\n        { \"name\": \"${bn}\","
-          echo -e -n "\n        \"digest\": { \"sha256\": \"${hash}\" }"
-          echo -e -n "\n        }\n      ]\n    }"
+          echo -e -n "\n    {\n      \"name\": \"attestation1.intoto\"," >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+          echo -e -n "\n      \"subjects\": [" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+          echo -e -n "\n        { \"name\": \"${bn}\"," >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+          echo -e -n "\n        \"digest\": { \"sha256\": \"${hash}\" }" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+          echo -e -n "\n        }\n      ]\n    }" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
 
           if [[ "$COUNTER" != "$NUM_JAR_FILES" ]]; then
-            echo -n ","
+            echo -n "," >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
           fi
 
 
           COUNTER=$[$COUNTER +1]
         done
 
-        echo -e "\n  ]"
-        echo "}"
-        echo -e "\n"
-        EOF
-        #TODO: output in file and base64 -w0
-        # NOTE: we relay the output from the inner Action.
-        echo "some-output=tool-defined-some-output" >> "$GITHUB_OUTPUT"
-        echo "other-output=tool-defined-other-output" >> "$GITHUB_OUTPUT"
-        # Expected file with pre-defined output
-        cat DATA > run.sh
-        chmod +x run.sh
-        ./run.sh > "$SLSA_OUTPUTS_ARTIFACTS_FILE"
-        #cat DATA > "$SLSA_OUTPUTS_ARTIFACTS_FILE"
-        cat "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+        echo -e "\n  ]" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+        echo "}" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+        echo -e "\n" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+        
+        
+#        cat <<EOF >DATA
+#        #!/bin/bash
+
+#        echo -e -n "{\n  \"version\": 1,\n  \"attestations\": ["
+#        #echo -e -n $STR
+#
+#        NUM_JAR_FILES=$(find target -type f -name "*jar" | wc -l)
+#        #echo $NUM_JAR_FILES
+#        COUNTER=1
+#        #find target -type f -name "*jar"|while read fname; do
+#        find target -name "*.jar" -print0 | while read -d $'\0' fname
+#        do
+#          echo "fname: ${fname}"
+#          #echo $COUNTER
+#          bn=$(basename -- $fname)
+#          echo "basename: ${bn}"
+#          hash=$(sha256sum $fname | awk '{print $1}')
+#          echo $file
+#          echo -e -n "\n    {\n      \"name\": \"attestation1.intoto\","
+#          echo -e -n "\n      \"subjects\": ["
+#          echo -e -n "\n        { \"name\": \"${bn}\","
+#          echo -e -n "\n        \"digest\": { \"sha256\": \"${hash}\" }"
+#          echo -e -n "\n        }\n      ]\n    }"
+#
+#          if [[ "$COUNTER" != "$NUM_JAR_FILES" ]]; then
+#            echo -n ","
+#          fi
+#
+#
+#          COUNTER=$[$COUNTER +1]
+#        done
+#
+#        echo -e "\n  ]"
+#        echo "}"
+#        echo -e "\n"
+#        EOF
+#        #TODO: output in file and base64 -w0
+#        # NOTE: we relay the output from the inner Action.
+#        echo "some-output=tool-defined-some-output" >> "$GITHUB_OUTPUT"
+#        echo "other-output=tool-defined-other-output" >> "$GITHUB_OUTPUT"
+#        # Expected file with pre-defined output
+#        cat DATA > run.sh
+#        chmod +x run.sh
+#        ./run.sh > "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+#        #cat DATA > "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+#        cat "$SLSA_OUTPUTS_ARTIFACTS_FILE"
 
     # Here we would possibly run jreleaser
     
