@@ -1,0 +1,63 @@
+on:
+  workflow_call:
+    inputs:
+      name1:
+        description: "name 1"
+        required: true
+        type: string
+      name2:
+        description: "name 2"
+        required: true
+        type: string
+      rekor-log-public:
+        description: "private"
+        required: false
+        type: boolean
+        default: false
+      provenance-overwrite:
+        description: "overwrite provenance if already present"
+        required: false
+        type: boolean
+        default: false
+      release-tag: #test
+        description: "tag collision with dispatch event"
+        required: false
+        type: string
+        default: "v100"
+jobs:
+  demo:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Print something
+      run: echo "hello"
+  slsa-setup:
+    permissions:
+      id-token: write # For token creation.
+    outputs:
+      slsa-token: ${{ steps.generate.outputs.slsa-token }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate the token
+        id: generate
+        uses: slsa-framework/slsa-github-generator/actions/delegator/setup-token@main
+        with:
+          slsa-workflow-recipient: "delegator_generic_slsa3.yml"
+          slsa-rekor-log-public: ${{ inputs.rekor-log-public }}
+          slsa-runner-label: "ubuntu-latest"
+          slsa-build-action-path: "./gradle-builder"
+          slsa-workflow-inputs: ${{ toJson(inputs) }}
+      - name: run echo after slsa-setup
+        run: echo "echo after slsa-setup"
+  slsa-run:
+    needs: [slsa-setup]
+    permissions:
+      id-token: write # For signing.
+      contents: write # For asset uploads.
+      actions: read   # For the entrypoint.
+      packages: write
+    uses: slsa-framework/slsa-github-generator/.github/workflows/delegator_generic_slsa3.yml@main
+    with:
+      slsa-token: ${{ needs.slsa-setup.outputs.slsa-token }}
+    #secrets:
+    #  secret1: ${{ secrets.secret1 }}
+    #  secret2: ${{ secrets.secret2 }}
