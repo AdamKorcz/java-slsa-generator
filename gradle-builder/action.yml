@@ -42,11 +42,12 @@ runs:
     - name: Put release artifacts in one directory
       shell: bash
       env:
-        ARTIFACT_LIST: ${{ inputs.artifact-list }}
+        ARTIFACT_LIST: ${{ fromJSON(inputs.slsa-workflow-inputs.artifact-list) }}
       run: |
         mkdir release-files-for-slsa
         GRADLE_VERSION=$(./gradlew properties -q | grep "version:" | awk '{print $2}')
         #ARTIFACT_LIST="abc,def,ghij"
+        echo $ARTIFACT_LIST
         for i in ${ARTIFACT_LIST//,/ }
         do
           PATH_WITH_VERSION="${"$i"/GRADLE_VERSION/"$GRADLE_VERSION"}"
