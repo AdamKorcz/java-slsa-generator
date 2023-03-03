@@ -48,12 +48,23 @@ runs:
         echo $ARTIFACT_LIST
         for i in ${ARTIFACT_LIST//,/ }
         do
-          PATH_WITH_VERSION="${"$i"/GRADLE_VERSION/"$GRADLE_VERSION"}"
-          echo "$i"
+          PATH_WITH_VERSION="${i//GRADLE_VERSION/"$GRADLE_VERSION"}"
+
           echo "$PATH_WITH_VERSION"
           bn=$(basename -- $PATH_WITH_VERSION)
-          mv $PATH_WITH_VERSION release-files-for-slsa/$bn          
+          echo $bn
+          mv $PATH_WITH_VERSION release-files-for-slsa/$bn
         done
+
+
+        #for i in ${ARTIFACT_LIST//,/ }
+        #do
+        #  PATH_WITH_VERSION="${"$i"/GRADLE_VERSION/"$GRADLE_VERSION"}"
+        #  echo "$i"
+        #  echo "$PATH_WITH_VERSION"
+        #  bn=$(basename -- $PATH_WITH_VERSION)
+        #  mv $PATH_WITH_VERSION release-files-for-slsa/$bn          
+        #done
         ls release-files-for-slsa
     #- name: Checkout tools repo
     #  uses: actions/checkout@v3
