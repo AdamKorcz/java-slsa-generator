@@ -24,6 +24,10 @@ on:
         required: false
         type: string
         default: "v100"
+      slsa-layout-file:
+        description: 'Location to store the layout content'
+        type: string
+        required: true
 jobs:
   run-builder:
     runs-on: ubuntu-latest
