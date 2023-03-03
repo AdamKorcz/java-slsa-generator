@@ -71,7 +71,7 @@ runs:
         #  bn=$(basename -- $PATH_WITH_VERSION)
         #  mv $PATH_WITH_VERSION release-files-for-slsa/$bn          
         #done
-        ls release-files-for-slsax
+        ls release-files-for-slsa
     #- name: Checkout tools repo
     #  uses: actions/checkout@v3
     #  with:
