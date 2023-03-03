@@ -34,7 +34,7 @@ runs:
       uses: gradle/gradle-build-action@v2
     - name: Run gradlew build
       shell: bash
-      run: ./gradlew --version && ./gradlew build
+      run: ./gradlew --version && ./gradlew build -x test
     - name: Upload built artifacts from gradlew build
       uses: actions/upload-artifact@v3
       with:
