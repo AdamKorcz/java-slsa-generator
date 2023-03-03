@@ -30,11 +30,13 @@ runs:
       with:
         distribution: temurin
         java-version: 11
-    - name: Setup Gradle
-      uses: gradle/gradle-build-action@v2
-    - name: Run gradlew build
-      shell: bash
-      run: ./gradlew --version && ./gradlew build -x test
+    #- name: Setup Gradle
+    #  uses: gradle/gradle-build-action@v2
+    #- name: Run gradlew build
+    #  shell: bash
+    #  run: ./gradlew --version && ./gradlew build -x test
+    - name: Run upstream workflow
+      uses: AdamKorcz/sigstore-java/.github/workflows/ci.yaml@main
     - name: Upload built artifacts from gradlew build
       uses: actions/upload-artifact@v3
       with:
