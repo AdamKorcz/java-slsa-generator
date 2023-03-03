@@ -1,0 +1,80 @@
+on:
+  workflow_call:
+    inputs:
+      name1:
+        description: "name 1"
+        required: true
+        type: string
+      name2:
+        description: "name 2"
+        required: true
+        type: string
+      rekor-log-public:
+        description: "private"
+        required: false
+        type: boolean
+        default: false
+      provenance-overwrite:
+        description: "overwrite provenance if already present"
+        required: false
+        type: boolean
+        default: false
+      release-tag: #test
+        description: "tag collision with dispatch event"
+        required: false
+        type: string
+        default: "v100"
+jobs:
+  run-builder:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+      - name: Run upstream workflow
+        uses: sigstore/sigstore-java/.github/workflows/ci.yaml@main
+      - name: run echo after slsa-setup
+        run: echo "echo after slsa-setup"
+      - name: Make outputs
+        id: make-outputs
+        env:
+          SLSA_OUTPUTS_ARTIFACTS_FILE: ${{ inputs.slsa-layout-file }}
+        shell: bash
+        run: |
+          # "version" and "attestations" fields:
+          echo -e -n "{\n  \"version\": 1,\n  \"attestations\": [" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+
+          NUM_JAR_FILES=$(find ./build/libs -type f -name "*jar" | wc -l)
+          COUNTER=1
+        
+          # Add one attestation per .jar file:
+          find ./build/libs -name "*.jar" -print0 | while read -d $'\0' fname
+          do
+          
+            bn=$(basename -- $fname)
+            hash=$(sha256sum $fname | awk '{print $1}')
+          
+            echo -n "
+              {
+                \"name\": \"${bn}-attestation.intoto\",
+                \"subjects\": [
+                  { \"name\": \"${bn}\",
+                  \"digest\": { \"sha256\": \"${hash}\"  }
+                  }
+                ]
+              }" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+          
+            # Add comma between attestations and not after the last
+            if [[ "$COUNTER" != "$NUM_JAR_FILES" ]]; then
+              echo -n "," >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+            fi
+          
+            COUNTER=$[$COUNTER +1]
+          done
+        
+          # Close "attestations" and "version":
+          echo -e "\n  ]" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+          echo "}" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
