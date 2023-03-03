@@ -18,6 +18,10 @@ inputs:
     description: 'secret2'
     type: string
     required: true
+  artifact-list:
+    description: 'comma-separated list of paths to artifacts to be released. Use GRADLEVERSION for the gradle version'
+    type: string
+    required: true
 
 on:
   workflow_call:
@@ -35,6 +39,23 @@ runs:
     - name: Run gradlew build
       shell: bash
       run: ./gradlew --version && ./gradlew build -x test -x javadoc
+    - name: Put release artifacts in one directory
+      shell: bash
+      env:
+        ARTIFACT_LIST: ${{ inputs.artifact-list }}
+      run: |
+        mkdir release-files-for-slsa
+        GRADLE_VERSION=$(./gradlew properties -q | grep "version:" | awk '{print $2}')
+        #ARTIFACT_LIST="abc,def,ghij"
+        for i in ${ARTIFACT_LIST//,/ }
+        do
+          PATH_WITH_VERSION="${"$i"/GRADLE_VERSION/"$GRADLE_VERSION"}"
+          echo "$i"
+          echo "$PATH_WITH_VERSION"
+          bn=$(basename -- $PATH_WITH_VERSION)
+          mv $PATH_WITH_VERSION release-files-for-slsa/$bn          
+        done
+        ls release-files-for-slsa
     #- name: Checkout tools repo
     #  uses: actions/checkout@v3
     #  with:
