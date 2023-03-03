@@ -29,18 +29,18 @@ runs:
       uses: actions/setup-java@v3
       with:
         distribution: temurin
-        java-version: 11
-    #- name: Setup Gradle
-    #  uses: gradle/gradle-build-action@v2
-    #- name: Run gradlew build
-    #  shell: bash
-    #  run: ./gradlew --version && ./gradlew build -x test
-    - name: Checkout tools repo
-      uses: actions/checkout@v3
-      with:
-        repository: sigstore/sigstore-java
-    - name: Run upstream workflow
-      uses: sigstore/sigstore-java/.github/workflows/ci.yaml@main
+        java-version: 17
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+    - name: Run gradlew build
+      shell: bash
+      run: ./gradlew --version && ./gradlew build -x test
+    #- name: Checkout tools repo
+    #  uses: actions/checkout@v3
+    #  with:
+    #    repository: sigstore/sigstore-java
+    #- name: Run upstream workflow
+    #  uses: sigstore/sigstore-java/.github/workflows/ci.yaml@main
     - name: Upload built artifacts from gradlew build
       uses: actions/upload-artifact@v3
       with:
