@@ -52,6 +52,7 @@ runs:
         echo $ARTIFACT_LIST
         for i in ${ARTIFACT_LIST//,/ }
         do
+          echo i: $i
           PATH_WITH_VERSION="${i//GRADLE_VERSION/"$GRADLE_VERSION"}"
 
           echo "$PATH_WITH_VERSION"
