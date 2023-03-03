@@ -34,7 +34,7 @@ runs:
       uses: gradle/gradle-build-action@v2
     - name: Run gradlew build
       shell: bash
-      run: ./gradlew --version && ./gradlew build -x test
+      run: ./gradlew --version && ./gradlew build -x test -x javadoc
     #- name: Checkout tools repo
     #  uses: actions/checkout@v3
     #  with:
