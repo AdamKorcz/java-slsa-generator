@@ -43,10 +43,11 @@ runs:
       shell: bash
       env:
         SLSA_OUTPUTS_ARTIFACTS_FILE: ${{ inputs.slsa-layout-file }}
+        ARTIFACT_LIST: ${{ fromJson(inputs.slsa-workflow-inputs).artifact-list }}
       run: |
         mkdir release-files-for-slsa
         GRADLE_VERSION=$(./gradlew properties -q | grep "version:" | awk '{print $2}')
-        ARTIFACT_LIST="./sigstore-java/build/local-maven-repo/dev/sigstore/sigstore-java/GRADLE_VERSION/sigstore-java-GRADLE_VERSION.module,\
+        #ARTIFACT_LIST="./sigstore-java/build/local-maven-repo/dev/sigstore/sigstore-java/GRADLE_VERSION/sigstore-java-GRADLE_VERSION.module,\
         ./sigstore-java/build/libs/sigstore-java-GRADLE_VERSION.jar"
         echo $ARTIFACT_LIST
         for i in ${ARTIFACT_LIST//,/ }
