@@ -63,6 +63,31 @@ runs:
           mv $PATH_WITH_VERSION release-files-for-slsa/$bn
         done
         
+        #for i in ${ARTIFACT_LIST//,/ }
+        #do
+        #  PATH_WITH_VERSION="${"$i"/GRADLE_VERSION/"$GRADLE_VERSION"}"
+        #  echo "$i"
+        #  echo "$PATH_WITH_VERSION"
+        #  bn=$(basename -- $PATH_WITH_VERSION)
+        #  mv $PATH_WITH_VERSION release-files-for-slsa/$bn          
+        #done
+        ls release-files-for-slsa
+        cat $SLSA_OUTPUTS_ARTIFACTS_FILE
+    #- name: Checkout tools repo
+    #  uses: actions/checkout@v3
+    #  with:
+    #    repository: sigstore/sigstore-java
+    #- name: Run upstream workflow
+    #  uses: sigstore/sigstore-java/.github/workflows/ci.yaml@main
+    - name: Upload built artifacts from gradlew build
+      uses: actions/upload-artifact@v3
+      with:
+        path: ./release-files-for-slsa/*
+    - name: Make outputs
+      id: make-outputs
+      env:
+        SLSA_OUTPUTS_ARTIFACTS_FILE: ${{ inputs.slsa-layout-file }}
+      run: |
         # "version" and "attestations" fields:
         echo -e -n "{\n  \"version\": 1,\n  \"attestations\": [" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
 
@@ -97,30 +122,6 @@ runs:
         # Close "attestations" and "version":
         echo -e "\n  ]" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
         echo "}" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
-        
-        
-
-
-        #for i in ${ARTIFACT_LIST//,/ }
-        #do
-        #  PATH_WITH_VERSION="${"$i"/GRADLE_VERSION/"$GRADLE_VERSION"}"
-        #  echo "$i"
-        #  echo "$PATH_WITH_VERSION"
-        #  bn=$(basename -- $PATH_WITH_VERSION)
-        #  mv $PATH_WITH_VERSION release-files-for-slsa/$bn          
-        #done
-        ls release-files-for-slsa
-        cat $SLSA_OUTPUTS_ARTIFACTS_FILE
-    #- name: Checkout tools repo
-    #  uses: actions/checkout@v3
-    #  with:
-    #    repository: sigstore/sigstore-java
-    #- name: Run upstream workflow
-    #  uses: sigstore/sigstore-java/.github/workflows/ci.yaml@main
-    - name: Upload built artifacts from gradlew build
-      uses: actions/upload-artifact@v3
-      with:
-        path: ./release-files-for-slsa/*
 #    - name: Make outputs
 #      id: make-outputs
 #      env:
