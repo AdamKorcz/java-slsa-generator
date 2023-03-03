@@ -71,8 +71,7 @@ runs:
         #  bn=$(basename -- $PATH_WITH_VERSION)
         #  mv $PATH_WITH_VERSION release-files-for-slsa/$bn          
         #done
-        ls release-files-for-slsa
-        cat $SLSA_OUTPUTS_ARTIFACTS_FILE
+        ls release-files-for-slsax
     #- name: Checkout tools repo
     #  uses: actions/checkout@v3
     #  with:
@@ -123,6 +122,7 @@ runs:
         # Close "attestations" and "version":
         echo -e "\n  ]" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
         echo "}" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+        cat "$SLSA_OUTPUTS_ARTIFACTS_FILE"
 #    - name: Make outputs
 #      id: make-outputs
 #      env:
