@@ -85,6 +85,7 @@ runs:
         path: ./release-files-for-slsa/*
     - name: Make outputs
       id: make-outputs
+      shell: bash
       env:
         SLSA_OUTPUTS_ARTIFACTS_FILE: ${{ inputs.slsa-layout-file }}
       run: |
