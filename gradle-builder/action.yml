@@ -53,7 +53,7 @@ runs:
         echo $ARTIFACT_LIST
         for i in ${ARTIFACT_LIST//,/ }
         do
-          i=$(echo $i | sed -i 's/\"//')
+          i=$(echo $i | sed 's/\"//')
           echo i: $i
           PATH_WITH_VERSION="${i//GRADLE_VERSION/"$GRADLE_VERSION"}"
 
