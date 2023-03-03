@@ -45,7 +45,7 @@ jobs:
       - name: Make outputs
         id: make-outputs
         env:
-          SLSA_OUTPUTS_ARTIFACTS_FILE: ${{ inputs.slsa-layout-file }}
+          SLSA_OUTPUTS_ARTIFACTS_FILE: artifacts-layout.json # ${{ inputs.slsa-layout-file }}
         shell: bash
         run: |
           # "version" and "attestations" fields:
