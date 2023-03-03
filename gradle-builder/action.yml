@@ -44,7 +44,7 @@ runs:
       run: |
         mkdir release-files-for-slsa
         GRADLE_VERSION=$(./gradlew properties -q | grep "version:" | awk '{print $2}')
-        ARTIFACT_LIST=""./sigstore-java/build/local-maven-repo/dev/sigstore/sigstore-java/0.4.0/sigstore-java-0.4.0.module,./sigstore-java/build/libs/sigstore-java-0.4.0.jar""
+        ARTIFACT_LIST=""./sigstore-java/build/local-maven-repo/dev/sigstore/sigstore-java/GRADLE_VERSION/sigstore-java-GRADLE_VERSION.module,./sigstore-java/build/libs/sigstore-java-GRADLE_VERSION.jar""
         echo $ARTIFACT_LIST
         for i in ${ARTIFACT_LIST//,/ }
         do
