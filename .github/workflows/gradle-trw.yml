@@ -24,6 +24,10 @@ on:
         required: false
         type: string
         default: "v100"
+      artifact-list:
+        description: 'comma-separated list of paths to artifacts to be released. Use GRADLEVERSION for the gradle version'
+        type: string
+        required: true
 jobs:
   demo:
     runs-on: ubuntu-latest
@@ -46,6 +50,7 @@ jobs:
           slsa-runner-label: "ubuntu-latest"
           slsa-build-action-path: "./gradle-builder"
           slsa-workflow-inputs: ${{ toJson(inputs) }}
+          artifact-list: ${{ input.artifact-list }}
       - name: run echo after slsa-setup
         run: echo "echo after slsa-setup"
   slsa-run:
