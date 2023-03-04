@@ -36,9 +36,11 @@ runs:
         java-version: 17
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
-    - name: Run gradlew build
-      shell: bash
-      run: ./gradlew --version && ./gradlew build -x test -x javadoc
+      with:
+        arguments: build -x test
+    #- name: Run gradlew build
+    #  shell: bash
+    #  run: ./gradlew --version && ./gradlew build -x test -x javadoc
     - name: Put release artifacts in one directory
       shell: bash
       env:
