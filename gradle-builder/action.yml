@@ -57,6 +57,11 @@ runs:
         for i in ${ARTIFACT_LIST//,/ }
         do
           i=$(echo $i | sed 's/\"//')
+          # check if $i is empty
+          if [ -z "$i" ]
+          then
+                continue
+          fi
           echo i: $i
           PATH_WITH_VERSION="${i//GRADLE_VERSION/"$GRADLE_VERSION"}"
 
