@@ -47,6 +47,7 @@ runs:
         SLSA_OUTPUTS_ARTIFACTS_FILE: ${{ inputs.slsa-layout-file }}
         ARTIFACT_LIST: ${{ fromJson(inputs.slsa-workflow-inputs).artifact-list }}
       run: |
+        find . -name "sigstore-java-*-javadoc.jar"
         mkdir release-files-for-slsa
         GRADLE_VERSION=$(./gradlew properties -q | grep "version:" | awk '{print $2}')
         #ARTIFACT_LIST="./sigstore-java/build/local-maven-repo/dev/sigstore/sigstore-java/GRADLE_VERSION/sigstore-java-GRADLE_VERSION.module,\
