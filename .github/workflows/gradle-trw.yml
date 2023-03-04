@@ -50,7 +50,6 @@ jobs:
           slsa-runner-label: "ubuntu-latest"
           slsa-build-action-path: "./gradle-builder"
           slsa-workflow-inputs: ${{ toJson(inputs) }}
-          artifact-list: ${{ inputs.artifact-list }}
       - name: run echo after slsa-setup
         run: echo "echo after slsa-setup"
   slsa-run:
