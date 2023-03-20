@@ -16,6 +16,11 @@ on:
         required: false
         type: string
         default: "v100"
+      jdk-version:
+        description: 'The JDK version'
+        required: true
+        default: 17
+        type: number
 jobs:
   demo:
     runs-on: ubuntu-latest
