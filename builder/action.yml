@@ -24,18 +24,45 @@ on:
 runs:
   using: 'composite'
   steps:
-    - name: Set up JDK 17
+    - name: Set up JDK
       uses: actions/setup-java@v3
       with:
-        java-version: '17'
+        java-version: ${{ fromJson(inputs.slsa-workflow-inputs).jdk-version }}
         distribution: 'temurin'
     - name: Run mvn package
       shell: bash
       run: mvn package
-    - name: Upload built artifacts from mvn package
+    - name: Put release artifacts in one directory
+      shell: bash
+      env:
+        SLSA_OUTPUTS_ARTIFACTS_FILE: ${{ inputs.slsa-layout-file }}
+        ARTIFACT_LIST: ${{ fromJson(inputs.slsa-workflow-inputs).artifact-list }}
+      run: |
+        find . -name "*.jar"
+        mkdir release-files-for-slsa
+        GRADLE_VERSION=TEST_VERSION
+        ARTIFACT_LIST=\"${ARTIFACT_LIST}\"
+        echo $ARTIFACT_LIST
+        for i in ${ARTIFACT_LIST//,/ }
+        do
+          i=$(echo $i | sed 's/\"//')
+          # check if $i is empty
+          if [ -z "$i" ]
+          then
+                continue
+          fi
+          echo i: $i
+          PATH_WITH_VERSION="${i//GRADLE_VERSION/"$GRADLE_VERSION"}"
+          echo "$PATH_WITH_VERSION"
+          bn=$(basename -- $PATH_WITH_VERSION)
+          echo $bn
+          mv $PATH_WITH_VERSION release-files-for-slsa/$bn
+        done
+        ls release-files-for-slsa
+    - name: Upload built artifacts from gradlew build
       uses: actions/upload-artifact@v3
       with:
-        path: target/*.jar
+        path: ./release-files-for-slsa/*
     - name: Make outputs
       id: make-outputs
       env:
@@ -44,12 +71,11 @@ runs:
       run: |
         # "version" and "attestations" fields:
         echo -e -n "{\n  \"version\": 1,\n  \"attestations\": [" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
-
-        NUM_JAR_FILES=$(find target -type f -name "*jar" | wc -l)
+        NUM_JAR_FILES=$(find ./release-files-for-slsa -type f | wc -l)
         COUNTER=1
         
         # Add one attestation per .jar file:
-        find target -name "*.jar" -print0 | while read -d $'\0' fname
+        find ./release-files-for-slsa -type f -print0 | while read -d $'\0' fname
         do
           
           bn=$(basename -- $fname)
@@ -76,3 +102,4 @@ runs:
         # Close "attestations" and "version":
         echo -e "\n  ]" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
         echo "}" >> "$SLSA_OUTPUTS_ARTIFACTS_FILE"
+        cat "$SLSA_OUTPUTS_ARTIFACTS_FILE"
