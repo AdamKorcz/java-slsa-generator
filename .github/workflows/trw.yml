@@ -1,14 +1,6 @@
 on:
   workflow_call:
     inputs:
-      name1:
-        description: "name 1"
-        required: true
-        type: string
-      name2:
-        description: "name 2"
-        required: true
-        type: string
       rekor-log-public:
         description: "private"
         required: false
