@@ -18,10 +18,6 @@ inputs:
     description: 'secret2'
     type: string
     required: true
-  artifact-list:
-    description: 'comma-separated list of paths to artifacts to be released. Use GRADLEVERSION for the gradle version'
-    type: string
-    required: true
 
 on:
   workflow_call:
@@ -29,11 +25,11 @@ runs:
   using: 'composite'
   steps:
     - uses: actions/checkout@v3
-    - name: Set up JDK 8
+    - name: Set up JDK
       uses: actions/setup-java@v3
       with:
         distribution: temurin
-        java-version: 8
+        java-version: ${{ fromJson(inputs.slsa-workflow-inputs).jdk-version }}
     - name: Setup Gradle
       uses: gradle/gradle-build-action@v2
       with:
