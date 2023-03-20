@@ -49,6 +49,8 @@ runs:
       run: |
         find . -name "sigstore-java-*-javadoc.jar"
         find . -name "*.jar"
+        echo finding lib
+        find . -name "lib"
         mkdir release-files-for-slsa
         GRADLE_VERSION=$(./gradlew properties -q | grep "version:" | awk '{print $2}')
         #ARTIFACT_LIST="./sigstore-java/build/local-maven-repo/dev/sigstore/sigstore-java/GRADLE_VERSION/sigstore-java-GRADLE_VERSION.module,\
