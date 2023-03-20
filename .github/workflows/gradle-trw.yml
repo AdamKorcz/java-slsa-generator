@@ -28,6 +28,11 @@ on:
         description: 'comma-separated list of paths to artifacts to be released. Use GRADLEVERSION for the gradle version'
         type: string
         required: true
+      jdk-version:
+        description: 'The JDK version'
+        required: true
+        default: 17
+        type: number
 jobs:
   demo:
     runs-on: ubuntu-latest
