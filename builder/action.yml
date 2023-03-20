@@ -40,7 +40,6 @@ runs:
       run: |
         find . -name "*.jar"
         mkdir release-files-for-slsa
-        #GRADLE_VERSION=3.29.2-GA
         PROJECT_VERSION=$(mvn org.apache.maven.plugins:maven-help-plugin:3.2.0:evaluate \
           -Dexpression=project.version -q -DforceStdout -f "pom.xml")
         ARTIFACT_LIST=\"${ARTIFACT_LIST}\"
@@ -54,7 +53,7 @@ runs:
                 continue
           fi
           echo i: $i
-          PATH_WITH_VERSION="${i//GRADLE_VERSION/"$PROJECT_VERSION"}"
+          PATH_WITH_VERSION="${i//PROJECT_VERSION/"$PROJECT_VERSION"}"
           echo "$PATH_WITH_VERSION"
           bn=$(basename -- $PATH_WITH_VERSION)
           echo $bn
