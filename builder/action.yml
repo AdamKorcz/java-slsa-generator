@@ -40,7 +40,7 @@ runs:
       run: |
         find . -name "*.jar"
         mkdir release-files-for-slsa
-        GRADLE_VERSION=TEST_VERSION
+        GRADLE_VERSION=3.29.2-GA
         ARTIFACT_LIST=\"${ARTIFACT_LIST}\"
         echo $ARTIFACT_LIST
         for i in ${ARTIFACT_LIST//,/ }
