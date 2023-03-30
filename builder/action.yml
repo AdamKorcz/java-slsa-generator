@@ -18,11 +18,6 @@ inputs:
     description: 'secret2'
     type: string
     required: true
-  build-only-source-code:
-    description: 'If true, we build the provenance just for the source tree, which means all .java files.'
-    type: boolean
-    required: false
-    default: false
     
 
 on:
