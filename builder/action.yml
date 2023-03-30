@@ -18,6 +18,12 @@ inputs:
     description: 'secret2'
     type: string
     required: true
+  build-only-source-code:
+    description: 'If true, we build the provenance just for the source tree, which means all .java files.'
+    type: boolean
+    required: false
+    default: false
+    
 
 on:
   workflow_call:
@@ -30,9 +36,11 @@ runs:
         java-version: ${{ fromJson(inputs.slsa-workflow-inputs).jdk-version }}
         distribution: 'temurin'
     - name: Run mvn package
+      if: ${{ ! inputs.build-only-source-code }}
       shell: bash
       run: mvn package
     - name: Put release artifacts in one directory
+      if: ${{ ! inputs.build-only-source-code }}
       shell: bash
       env:
         SLSA_OUTPUTS_ARTIFACTS_FILE: ${{ inputs.slsa-layout-file }}
