@@ -33,6 +33,11 @@ on:
         description: 'comma-separated list of paths to artifacts to be released. Use GRADLEVERSION for the gradle version'
         type: string
         required: true
+      build-only-source-code:
+        description: 'If true, we build the provenance just for the source tree, which means all .java files.'
+        type: boolean
+        required: false
+        default: false
 jobs:
   demo:
     runs-on: ubuntu-latest
