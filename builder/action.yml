@@ -60,7 +60,7 @@ runs:
           mv $PATH_WITH_VERSION release-files-for-slsa/$bn
         done
         ls release-files-for-slsa
-    - name: Upload built artifacts from gradlew build
+    - name: Upload built artifacts from
       uses: actions/upload-artifact@v3
       with:
         path: ./release-files-for-slsa/*
