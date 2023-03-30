@@ -26,7 +26,7 @@ on:
         default: "v100"
       jdk-version:
         description: 'The JDK version'
-        required: true
+        required: false
         default: 17
         type: number
       artifact-list:
