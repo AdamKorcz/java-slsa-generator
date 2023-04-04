@@ -30,7 +30,7 @@ on:
         required: true
       jdk-version:
         description: 'The JDK version'
-        required: true
+        required: false
         default: 17
         type: number
 jobs:
