@@ -25,7 +25,7 @@ on:
         type: string
         default: "v100"
       artifact-list:
-        description: 'comma-separated list of paths to artifacts to be released. Use GRADLEVERSION for the gradle version'
+        description: 'comma-separated list of paths to artifacts to be released. Use GRADLE_VERSION for the gradle version'
         type: string
         required: true
       jdk-version:
